@@ -58,13 +58,11 @@ app.post('/movies', async (req, res) => {
     res.status(201).send();
 });
 
-app.get('/movies/:id', async (req, res) => {
-    const movieId = parseInt(req.params.id);
-
+app.get('/movies/:id', async (req, res) => { 
     try {
         const movie = await prisma.movie.findMany({
             where: {
-                id: movieId,
+                id: Number(req.params.id),
             },
             include: {
                 genres: true,
@@ -79,9 +77,9 @@ app.get('/movies/:id', async (req, res) => {
 });
 
 app.put('/movies/:id', async (req, res) => {
-    const id = parseInt(req.params.id);
-
     try {
+        const id = Number(req.params.id);
+
         const movie = await prisma.movie.findUnique({
             where: {
                 id,
@@ -113,13 +111,13 @@ app.put('/movies/:id', async (req, res) => {
 });
 
 app.delete('/movies/:id', async (req, res) => {
-    const id = parseInt(req.params.id);
-
     try {
-        // const movie = await prisma.movie.findUnique({ where: { id } });
-        // if (!movie) {
-        //     return res.status(404).send({ message: 'Filme não encontrado' });
-        // }
+        const id = Number(req.params.id);
+
+        const movie = await prisma.movie.findUnique({ where: { id } });
+        if (!movie) {
+            return res.status(404).send({ message: 'Filme não encontrado' });
+        }
 
         await prisma.movie.delete({ where: { id } });
     } catch (error) {
@@ -129,6 +127,30 @@ app.delete('/movies/:id', async (req, res) => {
     }
     res.status(200).send();
 });
+
+app.get('/movies/genre/:genreName', async (req, res) => {
+    try {
+        const genreName = req.params.genreName;
+        const moviesFilteredByGenreName = await prisma.movie.findMany({
+            include: {
+                genres: true,
+                languages: true
+            },
+            where: {
+                genres: {
+                    name: {
+                        equals: genreName,
+                        mode: 'insensitive'
+                    }
+                }
+            }
+        })
+
+        res.status(200).send(moviesFilteredByGenreName)
+    }catch(error){
+        res.status(500).send({ message: 'Falha ao filtrar filmes por gênero.' })
+    }
+})
 
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
