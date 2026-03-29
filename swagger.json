@@ -68,12 +68,14 @@
                 }
             },
             "put": {
+                "tags": ["Movie"],
                 "summary": "Atualizar um filme existente",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
                         "required": true,
+                        "description": "ID do filme a ser atualizado.",
                         "schema": {
                             "type": "integer"
                         }
@@ -84,7 +86,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Movie"
+                                "$ref": "#/components/schemas/MovieInput"
                             }
                         }
                     }
@@ -95,24 +97,35 @@
                     },
                     "404": {
                         "description": "Filme não encontrado."
+                    },
+                    "500": {
+                        "description": "Falha ao atualizar o registro do filme"
                     }
                 }
             },
             "delete": {
+                "tags": ["Movie"],
                 "summary": "Excluir um filme existente",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
                         "required": true,
+                        "description": "ID do filme a ser removido.",
                         "schema": {
                             "type": "integer"
                         }
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "Filme excluído com sucesso."
+                    "200": {
+                        "description": "Filme removido com sucesso."
+                    },
+                    "404": {
+                        "description": "Filme não encontrado."
+                    },
+                    "500": {
+                        "description": "Não foi possível remover o filme."
                     }
                 }
             }
@@ -172,6 +185,44 @@
                                 "description": "Nome do língua."
                             }
                         }
+                    },
+                    "oscar_count": {
+                        "type": "integer",
+                        "example": 4,
+                        "description": "Número de Oscars ganhos pelo filme."
+                    },
+                    "release_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2010-07-16",
+                        "description": "Data de lançamento do filme."
+                    }
+                }
+            },
+            "MovieInput": {
+                "type": "object",
+                "required": [
+                    "title",
+                    "genre_id",
+                    "language_id",
+                    "oscar_count",
+                    "release_date"
+                ],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "example": "Inception",
+                        "description": "Título do filme."
+                    },
+                    "genre_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "ID do gênero do filme."
+                    },
+                    "language_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "ID do idioma do filme."
                     },
                     "oscar_count": {
                         "type": "integer",
