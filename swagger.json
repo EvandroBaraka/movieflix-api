@@ -27,6 +27,7 @@
                 }
             },
             "post": {
+                "tags": ["Movie"],
                 "summary": "Adicionar um novo filme",
                 "requestBody": {
                     "required": true,
@@ -39,14 +40,21 @@
                     }
                 },
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Filme adicionado com sucesso."
+                    },
+                    "409": {
+                        "description": "Filme já cadastrado no banco de dados."
+                    },
+                    "500": {
+                        "description": "Falha ao cadastrar um filme."
                     }
                 }
             }
         },
         "/movies/{id}": {
             "get": {
+                "tags": ["Movie"],
                 "summary": "Obter detalhes de um filme específico",
                 "parameters": [
                     {

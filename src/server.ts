@@ -58,7 +58,7 @@ app.post('/movies', async (req, res) => {
             .send({ message: `Falha ao cadastrar um filme - ${error}` });
     }
 
-    res.status(201).send();
+    res.status(201).send('Filme adicionado com sucesso.');
 });
 
 app.get('/movies/:id', async (req, res) => {
