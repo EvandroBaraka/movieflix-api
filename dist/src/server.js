@@ -1,7 +1,9 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from '../swagger.json';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const swaggerDocument = require('../swagger.json');
 const prisma = new PrismaClient();
 const app = express();
 const port = 3000;
